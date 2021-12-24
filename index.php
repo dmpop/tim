@@ -1,8 +1,8 @@
 <?php
-    // Theme (light, dark, sepia)
-    $theme = "dark";
-    // Footer
-    $footer = "Read the <a href='https://dmpop.gumroad.com/l/linux-photography'>Linux Photography</a> book.";
+// Theme (light, dark, sepia)
+$theme = "dark";
+// Footer
+$footer = "Read the <a href='https://dmpop.gumroad.com/l/linux-photography'>Linux Photography</a> book.";
 ?>
 
 <!DOCTYPE html>
@@ -37,20 +37,25 @@
 		<h1 class="text-center" style="display: inline; margin-left: 0.19em; vertical-align: middle; letter-spacing: 3px; margin-top: 0em; color: #f6a159ff;">Tim</h1>
 		<p style="color: lightgray; margin-bottom: 1.5em;">Current upload limit is <u><?php echo $upload_mb; ?>MB</u></p>
 	</div>
-	
+
 	<div class="card">
 
 		<form style="margin-top: 1em;" action=" " method="POST" enctype="multipart/form-data">
 			<label for="fileToUpload">Select JPEG file:</label>
 			<input style="margin-bottom: 1.5em; margin-top: 0.5em;" type="file" name="fileToUpload" id="fileToUpload">
-			<label for="quality">Select quality:</label>
 			<select name="quality">
 				<option value="low">Low</option>
 				<option value="medium" selected>Medium</option>
 				<option value="high">High</option>
 				<option value="veryhigh">Very high</option>
 			</select>
-			<input type="checkbox" name="keep" value="ok"> Keep files
+			<div>
+				<input type="checkbox" name="keep" value="ok"> Keep files
+			</div>
+			<div>
+				<input type="checkbox" name="strip" value="ok"> Remove metadata
+			</div>
+
 			<button style="margin-bottom: 1.5em;" type="submit" name="recompress">Recompress</button>
 		</form>
 
@@ -64,8 +69,10 @@
 					Select the desired recompression quality using the <strong>Quality</strong> drop-down list.
 				</li>
 				<li>
-					
-					If you want to save the uploaded and resulting files on the server, enable the <strong>Keep files</strong> option.
+					To save the uploaded and resulting files on the server, enable the <strong>Keep files</strong> option.
+				</li>
+				<li>
+					To remove all metadata from the resulting file, enable the <strong>Remove metadata</strong> option.
 				</li>
 				<li>
 					Press the <kbd>Recompress</kbd> button.
@@ -101,8 +108,13 @@
 			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 				$f = 'upload/' . $_FILES["fileToUpload"]["name"];
 				$q = $_POST['quality'];
-				$r = "recompressed_" . $q . "_"  . basename($_FILES["fileToUpload"]["name"]);
-				shell_exec("./jpeg-recompress --quality " . $q . " " . $f . " " . $r);
+				if (isset($_POST['strip'])) {
+					$r = "noexif_" . $q . "_"  . basename($_FILES["fileToUpload"]["name"]);
+					shell_exec("./jpeg-recompress --strip --quality " . $q . " " . $f . " " . $r);
+				} else {
+					$r = $q . "_"  . basename($_FILES["fileToUpload"]["name"]);
+					shell_exec("./jpeg-recompress --quality " . $q . " " . $f . " " . $r);
+				}
 				ob_start();
 				while (ob_get_status()) {
 					ob_end_clean();
