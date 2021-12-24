@@ -61,6 +61,7 @@ include('config.php');
 					Select the desired recompression quality using the <strong>Quality</strong> drop-down list.
 				</li>
 				<li>
+					
 					If you want to save the uploaded and resulting files on the server, enable the <strong>Keep files</strong> option.
 				</li>
 				<li>
