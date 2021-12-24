@@ -15,8 +15,8 @@ html[data-theme='dark'] {
 	--cfg:   #cecbc4; --cbg:    #252220;
 	--cdark: #999;    --clight: #333;
 	--cmed:  #566;
-	--clink: #1ad;
-	--cemph: #0b9;
+	--clink: #d35f5fff;
+	--cemph: #ff7f2aff;
 }
 
 @media (prefers-color-scheme: dark) {
