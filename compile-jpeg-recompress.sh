@@ -5,6 +5,6 @@ cd mozjpeg
 sudo cmake -G"Unix Makefiles" 
 sudo make install
 cd
-git clone git@github.com:danielgtaylor/jpeg-archive.git
+git clone https://github.com/danielgtaylor/jpeg-archive.git
 cd jpeg-archive
 make
