@@ -34,19 +34,31 @@ include('config.php');
 		<h1 class="text-center" style="display: inline; margin-left: 0.19em; vertical-align: middle; letter-spacing: 3px; margin-top: 0em; color: #f6a159ff;">Tim</h1>
 		<p style="color: lightgray; margin-bottom: 1.5em;">Current upload limit is <u><?php echo $upload_mb; ?>MB</u></p>
 	</div>
+	
 	<div class="card">
 
 		<form style="margin-top: 1em;" action=" " method="POST" enctype="multipart/form-data">
 			<label for="fileToUpload">Select JPEG file:</label>
 			<input style="margin-bottom: 1.5em; margin-top: 0.5em;" type="file" name="fileToUpload" id="fileToUpload">
-
-			<button style="margin-bottom: 1.5em;" type="submit" name="recompress">Recompress</button> <input type="checkbox" name="keep" value="ok"> Keep files
+			<label for="quality">Select quality:</label>
+			<select name="quality">
+				<option value="low">Low</option>
+				<option value="medium" selected>Medium</option>
+				<option value="high">High</option>
+				<option value="veryhigh">Very high</option>
+			</select>
+			<input type="checkbox" name="keep" value="ok"> Keep files
+			<button style="margin-bottom: 1.5em;" type="submit" name="recompress">Recompress</button>
 		</form>
+
 		<details>
 			<summary style="letter-spacing: 1px; color: #f6a159ff;">Help</summary>
 			<ol>
 				<li>
 					Select the desired JPEG file using the <kbd>Browse</kbd> button.
+				</li>
+				<li>
+					Select the desired recompression quality using the <strong>Quality</strong> drop-down list.
 				</li>
 				<li>
 					If you want to save the uploaded and resulting files on the server, enable the <strong>Keep files</strong> option.
@@ -84,8 +96,9 @@ include('config.php');
 		} else {
 			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 				$f = 'upload/' . $_FILES["fileToUpload"]["name"];
-				$r = "recompressed_"  . basename($_FILES["fileToUpload"]["name"]);
-				shell_exec("./jpeg-recompress " . $f . " " . $r);
+				$q = $_POST['quality'];
+				$r = "recompressed_" . $q . "_"  . basename($_FILES["fileToUpload"]["name"]);
+				shell_exec("./jpeg-recompress --quality " . $q . " " . $f . " " . $r);
 				ob_start();
 				while (ob_get_status()) {
 					ob_end_clean();
@@ -93,7 +106,7 @@ include('config.php');
 				header('Content-type: image/jpeg');
 				header('Content-Disposition: attachment; filename="' . $r . '"');
 				readfile($r);
-				if ($_POST['keep'] == 'ok') {
+				if (isset($_POST['keep'])) {
 					rename($r, "result/" . $r);
 				} else {
 					unlink($f);
