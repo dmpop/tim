@@ -24,10 +24,6 @@ To host Tim on a remote web server, move the the _tim_ directory to the document
 
 To change the default upload size, open the _php.ini_ file for editing (for example, `sudo nano /etc/php7/cli/php.ini`) and adjust the values of the `upload_max_filesize`, `post_max_size`, and `memory_limit` parameters.
 
-The [Linux Photography](https://gumroad.com/l/linux-photography) book provides detailed information on deploying and using Tim. Get your copy at [Google Play Store](https://play.google.com/store/books/details/Dmitri_Popov_Linux_Photography?id=cO70CwAAQBAJ) or [Gumroad](https://gumroad.com/l/linux-photography).
-
-<img src="https://i.imgur.com/wBgcfSk.jpg" title="Linux Photography book" width="200"/>
-
 ## Problems?
 
 Please report bugs and issues in the [Issues](https://github.com/dmpop/tim/issues) section.
